@@ -1,0 +1,58 @@
+#NOTYET!/bin/bash
+
+##
+set -ex
+
+echo 'force-unsafe-io' > /etc/dpkg/dpkg.cfg.d/unsafe-io
+echo 'Debug::pkgProblemResolver "true";' > /etc/apt/apt.conf.d/debug
+echo 'APT::Get::AllowUnauthenticated "true";' > /etc/apt/apt.conf.d/unsigned
+apt-get update
+
+mv /usr/sbin/invoke-rc.d /usr/sbin/invoke-rc.d.bak
+ln -s /bin/true /usr/sbin/invoke-rc.d
+
+## 1) port deepin-ui on armhf architecture
+### 2) build armhf packages, add those on new repo.
+####2.1) add new repositories, example:
+      apt-add-repository -y ppa:deepin-phablet/ppa
+      apt-add-repository -y ppa:deepin-phablet/ubuntu-apps
+
+#let's remove some things about unity 8 examples:
+  
+  [..]
+  ubuntu-mobile-icons \
+  ubuntu-sounds \
+  ubuntu-system-settings \
+  ubuntu-system-settings-online-accounts \
+  ubuntu-touch \
+  ubuntu-touch-customization-hooks \
+  ubuntu-touch-settings \
+  ubuntu-touch-sounds \
+  ubuntu-ui-toolkit-theme \
+  ubuntu-upload-manager \
+  ubuntuone-client-data \
+  ubuntuone-credentials-common \
+  unity-plugin-scopes \
+  unity-schemas \
+  unity-scope-click \
+  unity-scope-click-departmentsdb \
+  unity-scope-mediascanner2 \
+  unity-scope-scopes \
+  unity-system-compositor \
+  unity-webapps-qml \
+  unity8
+  
+  apt-get -yf install
+
+rm /var/lib/dpkg/triggers/update-initramfs
+apt-get install -y --force-yes plasma-phone
+
+apt-get remove -y mtp-server
+apt-get install -y mtp-server
+
+apt-get install -y deepin-ui deepin-phablet
+
+!!!Original: https://github.com/KDE/mobster
+
+
+
